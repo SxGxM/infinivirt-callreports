@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser= require('body-parser')
 const multer = require('multer');
-const { ReporteLlamadasTrafico, ReporteLlamadasCliente} = require("../services/Reports");
+const { ReporteLlamadasTrafico, ReporteLlamadasCliente, ReporteLlamadasRepVent, ReporteLlamadasPais, ReporteLlamadasTipoCl} = require("../services/Reports");
 
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -27,31 +27,34 @@ const { ReporteLlamadasTrafico, ReporteLlamadasCliente} = require("../services/R
       res.send(file)
   });
 
-  app.get('/CRFKindOfTraffic', async function (req, res) {
+  app.get('/CRFKindOfTraffic', async function (req, res) {  //Ruta para generar el reporte por tipo de tráfico
     const respuesta = await ReporteLlamadasTrafico(req.query.kind)
     res.status(respuesta.status)
-    res.send(respuesta.result);
+    res.send({response:respuesta})
   });
 
-  app.get('/CRFClient', async function (req, res) {
+  app.get('/CRFClient', async function (req, res) {   //Ruta para generar el reporte por cliente
     const respuesta = await ReporteLlamadasCliente(req.query.clientName)
     res.status(respuesta.status)
-    res.send({response:respuesta});
+    res.send({response:respuesta})
   });
 
-  app.get('/api', async function (req, res) {
-    const respuesta = await ReporteLlamadas()
-    res.send(respuesta);
+  app.get('/CRSalesRep', async function (req, res) {  //Ruta para generar el reporte por representante de ventas
+    const respuesta = await ReporteLlamadasRepVent(req.query.salesName)
+    res.status(respuesta.status)
+    res.send({response:respuesta})
   });
 
-  app.get('/api', async function (req, res) {
-    const respuesta = await ReporteLlamadas()
-    res.send(respuesta);
+  app.get('/CRCountry', async function (req, res) { //Ruta para generar el reporte por pais
+    const respuesta = await ReporteLlamadasPais(req.query.country)
+    res.status(respuesta.status)
+    res.send({response:respuesta})
   });
 
-  app.get('/api', async function (req, res) {
-    const respuesta = await ReporteLlamadas()
-    res.send(respuesta);
+  app.get('/CRClientType', async function (req, res) {
+    const respuesta = await ReporteLlamadasTipoCl(req.query.typeCl)
+    res.status(respuesta.status)
+    res.send({response:respuesta})
   });
 
   app.listen(3000, () => {
