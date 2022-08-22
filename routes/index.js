@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser= require('body-parser')
 const multer = require('multer');
+const { ReporteLlamadasTrafico, ReporteLlamadasCliente} = require("../services/Reports");
 
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -26,8 +27,31 @@ const multer = require('multer');
       res.send(file)
   });
 
-  app.get('/api', function (req, res) {
-    res.send('[GET]Saludos desde express');
+  app.get('/CRFKindOfTraffic', async function (req, res) {
+    const respuesta = await ReporteLlamadasTrafico(req.query.kind)
+    res.status(respuesta.status)
+    res.send(respuesta.result);
+  });
+
+  app.get('/CRFClient', async function (req, res) {
+    const respuesta = await ReporteLlamadasCliente(req.query.clientName)
+    res.status(respuesta.status)
+    res.send({response:respuesta});
+  });
+
+  app.get('/api', async function (req, res) {
+    const respuesta = await ReporteLlamadas()
+    res.send(respuesta);
+  });
+
+  app.get('/api', async function (req, res) {
+    const respuesta = await ReporteLlamadas()
+    res.send(respuesta);
+  });
+
+  app.get('/api', async function (req, res) {
+    const respuesta = await ReporteLlamadas()
+    res.send(respuesta);
   });
 
   app.listen(3000, () => {
